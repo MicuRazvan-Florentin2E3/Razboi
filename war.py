@@ -20,7 +20,7 @@ class Card:
    def printCard(self):
       print("Symbol:", self.getSymbol(), ", Value:", self.getValue())
       
-class Jucator:
+class Player:
    cards = list()
    
    def __init__(self, cards):
@@ -93,6 +93,16 @@ def shuffleDeck(deck):
 if __name__ == '__main__':
    #openWindow()
    deck = shuffleDeck(createDeck())
-   for a in deck:
-      print(a.printCard())
+   cardsForPlayer1 = list()
+   cardsForPlayer2 = list()
+   for i in range(0, 26):
+      cardsForPlayer1.append(deck[i])
+      cardsForPlayer2.append(deck[51 - i])
+   
+   player1 = Player(cardsForPlayer1)
+   player2 = Player(cardsForPlayer2)
+   
+   print(len(player1.getCards()))
+      
+   
    
