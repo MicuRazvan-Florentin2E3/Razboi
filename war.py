@@ -84,7 +84,8 @@ class Game:
    nextCardButton = tk.Button('')
    war = False
    cardsForWinner = list()
-   
+   winner = Player([], '')
+   draw = False
    def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
@@ -169,6 +170,8 @@ class Game:
             self.war = True
             
          self.setPlayersLables()
+      self.draw = True
+      self.showWinner()
          
    def warCase(self):
       if self.war == True:
@@ -203,7 +206,23 @@ class Game:
                self.war = False
             else:
                self.warCase()
-            
+   
+   def setWinner(self, player):
+      self.winner = player
+      
+   def showWinner(self):
+      for widget in self.window.winfo_children():
+         widget.destroy()
+      if self.draw == False:
+         labelWinner= tk.Label(self.window, 
+                              text = "Congrat: " + self.winner.getName() + " you are the winner!",
+                              bd = '1', relief = 'sunken').pack()
+      else:
+         labelWinner= tk.Label(self.window, 
+                              text = "Draw",
+                              bd = '1', relief = 'sunken').pack()
+      
+      
 def createDeck():
    deck = list()
    symbols = ['club', 'diamond', 'heart', 'spade']
