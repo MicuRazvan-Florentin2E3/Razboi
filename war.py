@@ -154,6 +154,17 @@ class Game:
       
    def giveNextCard(self):
       if self.war == False:
+         if len(self.player1.getCards()) > 0 or len(self.player2.getCards()) > 0:
+            if len(self.player1.getCards()) == 0:
+               self.setWinner(self.player2)
+               self.showWinner()
+            elif len(self.player2.getCards()) == 0:
+               self.setWinner(self.player1)
+               self.showWinner()
+         else:
+            self.draw = True
+            self.showWinner()
+         
          player1Card = self.player1.getCards()[0]
          player2Card = self.player2.getCards()[0]
          self.setCardsLabels(player1Card, player2Card)
@@ -174,14 +185,7 @@ class Game:
             self.war = True
             
          self.setPlayersLables()
-         
-      if len(self.player1.getCards()) == 0:
-         self.setWinner(self.player1)
-         self.showWinner()
-      elif len(self.player2.getCards()) == 0:
-         self.setWinner(self.player2)
-         self.showWinner()
-         
+      
    def warCase(self):
       if self.war == True:
          if self.cardsForWinner[-1].getValue() != 100:
@@ -216,8 +220,6 @@ class Game:
                self.cardsForWinner = list()
                self.war = False
                self.player2.increaseScore()
-            else:
-               self.warCase()
                
       if len(self.player1.getCards()) == 0:
          self.setWinner(self.player1)
@@ -276,12 +278,22 @@ def caseDraw(player1, player2):
 
    return [player1, player2]
 
+def caseP1Wins(player1, player2):
+   player1.setCards([Card('diamond', 3)])
+   player2.setCards([Card('heart', 2)])
+
+   return [player1, player2]
+
 def startGame(player1, player2):
-   #player1 = caseDoubleWar(player1, player2)[0]
-   #player2 = caseDoubleWar(player1, player2)[1]
+   player1 = caseDoubleWar(player1, player2)[0]
+   player2 = caseDoubleWar(player1, player2)[1]
    
-   player1 = caseDraw(player1, player2)[0]
-   player2 = caseDraw(player1, player2)[0]
+   #player1 = caseDraw(player1, player2)[0]
+   #player2 = caseDraw(player1, player2)[1]
+   
+   #player1 = caseP1Wins(player1, player2)[0]
+   #player2 = caseP1Wins(player1, player2)[1]
+   
    game = Game(player1, player2)
    
 if __name__ == '__main__':
