@@ -71,7 +71,9 @@ class Player:
    
    def setFirstCard(self, card):
       self.cards[0] = card
-
+   
+   def setCards(self, cards):
+      self.cards = cards
 
 class Game:
    player1 = Player([], '')
@@ -163,15 +165,22 @@ class Game:
          if player1Card.getValue() > player2Card.getValue():
             self.player1.addCards(self.cardsForWinner)
             self.cardsForWinner = list()
+            self.player1.increaseScore()
          elif player1Card.getValue() < player2Card.getValue():
             self.player2.addCards(self.cardsForWinner)
             self.cardsForWinner = list()
+            self.player2.increaseScore()
          else:
             self.war = True
             
          self.setPlayersLables()
-      self.draw = True
-      self.showWinner()
+         
+      if len(self.player1.getCards()) == 0:
+         self.setWinner(self.player1)
+         self.showWinner()
+      elif len(self.player2.getCards()) == 0:
+         self.setWinner(self.player2)
+         self.showWinner()
          
    def warCase(self):
       if self.war == True:
@@ -179,9 +188,10 @@ class Game:
             nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
          else:
             nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
-         
+         print(nrDeCartiDeDat)
          if(nrDeCartiDeDat == 0):
-            print("Total draw")
+            self.draw = True
+            self.showWinner()
          else:
             for i in range(1, nrDeCartiDeDat + 1):
                self.player1.getCards()[0].printCard()
@@ -200,13 +210,22 @@ class Game:
                self.player1.addCards(self.cardsForWinner)
                self.cardsForWinner = list()
                self.war = False
+               self.player1.increaseScore()
             elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
                self.player2.addCards(self.cardsForWinner)
                self.cardsForWinner = list()
                self.war = False
+               self.player2.increaseScore()
             else:
                self.warCase()
-   
+               
+      if len(self.player1.getCards()) == 0:
+         self.setWinner(self.player1)
+         self.showWinner()
+      elif len(self.player2.getCards()) == 0:
+         self.setWinner(self.player2)
+         self.showWinner()
+         
    def setWinner(self, player):
       self.winner = player
       
@@ -251,9 +270,18 @@ def caseDoubleWar(player1, player2):
    
    return [player1, player2]
 
+def caseDraw(player1, player2):
+   player1.setCards([Card('diamond', 2)])
+   player2.setCards([Card('heart', 2)])
+
+   return [player1, player2]
+
 def startGame(player1, player2):
-   player1 = caseDoubleWar(player1, player2)[0]
-   player2 = caseDoubleWar(player1, player2)[1]
+   #player1 = caseDoubleWar(player1, player2)[0]
+   #player2 = caseDoubleWar(player1, player2)[1]
+   
+   player1 = caseDraw(player1, player2)[0]
+   player2 = caseDraw(player1, player2)[0]
    game = Game(player1, player2)
    
 if __name__ == '__main__':
