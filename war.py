@@ -5,6 +5,7 @@ import tkinter as tk
 class Card:
    symbol = ''
    value = 0
+   
    def __init__(self, symbol, value):
       self.symbol = symbol
       self.value = value
@@ -15,6 +16,20 @@ class Card:
    def getValue(self):
       return self.value
    
+   def getValueForShow(self):
+      if self.value <= 10:
+         return str(self.value)
+      elif self.value == 12:
+         return 'J'
+      elif self.value == 13:
+         return 'Q'
+      elif self.value == 14:
+         return 'k'
+      else:
+         return 'A'
+   
+   
+      
    def printCard(self):
       print("Symbol:", self.getSymbol(), ", Value:", self.getValue())
       
@@ -61,7 +76,12 @@ class Game:
    player1 = Player([], '')
    player2 = Player([], '')
    window = tk.Tk()
+   spadeImg = tk.PhotoImage(file = 'spade.png')
+   diamondImg = tk.PhotoImage(file = 'diamond.png')
+   clubImg = tk.PhotoImage(file = 'club.png')
+   heartImg = tk.PhotoImage(file = 'heart.png')
    nextCardButton = tk.Button('')
+   
    def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
@@ -69,7 +89,7 @@ class Game:
    
    def start(self):
       self.setWindowSettings()
-      self.setLables()
+      self.setPlayersLables()
       self.setNextCardButton()
       self.window.mainloop()
    
@@ -77,18 +97,46 @@ class Game:
       self.window.geometry('900x400')
       self.window.title("War")
       
-   def setLables(self):
-      
-      label1 = tk.Label(self.window, 
+   def setPlayersLables(self):
+      labelPlayer1 = tk.Label(self.window, 
                      text = self.player1.getCurrentStatusInGame(),
-                     bd = '1', relief = 'sunken')
-      label1.place(x = 20, y = 50)
+                     bd = '1', relief = 'sunken').place(x = 20, y = 20)
       
-      label2 = tk.Label(self.window, 
+      labelPlayer2 = tk.Label(self.window, 
                      text = self.player2.getCurrentStatusInGame(),
-                     bd = '1', relief = 'sunken')
-      label2.place(x = 725, y = 50)
-   
+                     bd = '1', relief = 'sunken').place(x = 725, y = 20)
+
+   def getSymbolForShow(self, symbol):
+      if symbol == 'diamond':
+         return self.diamondImg
+      elif symbol == 'heart':
+         return self.heartImg
+      elif symbol == 'club':
+         return self.clubImg
+      else:
+         return self.spadeImg
+      
+   def setCardsLabels(self, cardPlayer1, cardPlayer2):
+      cardPlayer1Value = cardPlayer1.getValueForShow()
+      cardPlayer2Value = cardPlayer2.getValueForShow()
+      
+      cardPlayer1Symbol = self.getSymbolForShow(cardPlayer1.getSymbol())
+      cardPlayer2Symbol = self.getSymbolForShow(cardPlayer2.getSymbol())
+      
+      labelCardPlayer1 = tk.Label(self.window,
+                                 text = cardPlayer1Value,
+                                 bd = '1', relief = 'sunken',
+                                 height = 400, width = 140, 
+                                 image =  cardPlayer1Symbol, compound = 'top',
+                                 font = ('Ariel', 100)).place(x = 20, y = 40)
+      
+      labelCardPlayer2 = tk.Label(self.window,
+                                 text = cardPlayer2Value,
+                                 bd = '1', relief = 'sunken',
+                                 height = 400, width = 140, 
+                                 image =  cardPlayer2Symbol, compound = 'top',
+                                 font = ('Ariel', 100)).place(x = 725, y = 40)
+      
    def setNextCardButton(self):
       self.nextCardButton = tk.Button(self.window, text="Next Card", width = 20, command = self.giveNextCard)
       self.nextCardButton.place(x = 400, y = 300)
@@ -96,8 +144,9 @@ class Game:
    def giveNextCard(self):
       player1Card = self.player1.getCards()[0]
       player2Card = self.player2.getCards()[0]
-      player1.removeFirstCard()
-      player2.removeFirstCard()
+      self.setCardsLabels(player1Card, player2Card)
+      self.player1.removeFirstCard()
+      self.player2.removeFirstCard()
       
       cardsForWinner = [player1Card, player2Card]
 
@@ -110,9 +159,9 @@ class Game:
       else:
          print("Razboi")
          if player1Card.getValue() != 100:
-            nrDeCartiDeDat = min(player1Card.getValue(), min(len(player1.getCards()), len(player2.getCards())))
+            nrDeCartiDeDat = min(player1Card.getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
          else:
-            nrDeCartiDeDat = min(11, min(len(player1.getCards()), len(player2.getCards())))
+            nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
          
          if(nrDeCartiDeDat == 0):
             print("Total draw")
@@ -128,20 +177,20 @@ class Game:
          lastCardPlayer2 = self.player2.getCards()[0]
          cardsForWinner.append(lastCardPlayer1)
          cardsForWinner.append(lastCardPlayer2)
-         player1.removeFirstCard()
-         player2.removeFirstCard()
+         self.player1.removeFirstCard()
+         self.player2.removeFirstCard()
          
       if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
-         player1.addCards(cardsForWinner)
+         self.player1.addCards(cardsForWinner)
       elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
-         player2.addCards(cardsForWinner)
+         self.player2.addCards(cardsForWinner)
       else:
          print("Razboi:")
          nrDeCartiDeDat = 0
          if lastCardPlayer1.getValue() != 100:
-            nrDeCartiDeDat = min(lastCardPlayer1.getValue(), min(len(player1.getCards()), len(player2.getCards())))
+            nrDeCartiDeDat = min(lastCardPlayer1.getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
          else:
-            nrDeCartiDeDat = min(11, min(len(player1.getCards()), len(player2.getCards())))
+            nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
             
          if(nrDeCartiDeDat == 0):
             print("Total draw")
