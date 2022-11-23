@@ -54,6 +54,8 @@ class Player:
    def getCurrentStatusInGame(self):
       return self.getName() + " Cards: " + str(len(self.getCards())) + " Score: " + str(self.getScore())
    
+   def setFirstCard(self, card):
+      self.cards[0] = card
 class Game:
    player1 = Player([], '')
    player2 = Player([], '')
@@ -89,8 +91,43 @@ class Game:
       self.nextCardButton.place(x = 400, y = 300)
       
    
-   def giveNextCard(event):
-      print("test button")
+   def giveNextCard(self):
+      player1Card = self.player1.getCards()[0]
+      player2Card = self.player2.getCards()[0]
+      player1.removeFirstCard()
+      player2.removeFirstCard()
+      
+      cardsForWinner = [player1Card, player2Card]
+
+      player1Card.printCard()
+      player2Card.printCard()
+      if player1Card.getValue() > player2Card.getValue():
+         self.player1.addCards(cardsForWinner)
+      elif player1Card.getValue() < player2Card.getValue():
+         self.player2.addCards(cardsForWinner)
+      else:
+         print("Razboi")
+         if player1Card.getValue() != 100:
+            nrDeCartiDeDat = min(player1Card.getValue(), min(len(player1.getCards()), len(player2.getCards())))
+         else:
+            nrDeCartiDeDat = min(11, min(len(player1.getCards()), len(player2.getCards())))
+         print(nrDeCartiDeDat)
+         for i in range(1, nrDeCartiDeDat + 1):
+            self.player1.getCards()[0].printCard()
+            self.player2.getCards()[0].printCard()
+            lastCardPlayer1 = self.player1.getCards()[0]
+            lastCardPlayer2 = self.player2.getCards()[0]
+            cardsForWinner.append(lastCardPlayer1)
+            cardsForWinner.append(lastCardPlayer2)
+            player1.removeFirstCard()
+            player2.removeFirstCard()
+         
+         if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
+            print("Player 1 wins")
+            player1.addCards(cardsForWinner)
+         else:
+            print("Player 2 wins")
+            player2.addCards(cardsForWinner)
       
 def createDeck():
    deck = list()
@@ -121,6 +158,9 @@ if __name__ == '__main__':
    for i in range(0, 26):
       cardsForPlayer1.append(deck[i])
       cardsForPlayer2.append(deck[51 - i])
+   
+   cardsForPlayer1[0] = Card('diamond', 7)
+   cardsForPlayer2[0] = Card('heart', 7)
    
    player1 = Player(cardsForPlayer1, "Player")
    player2 = Player(cardsForPlayer2, "Computer")
