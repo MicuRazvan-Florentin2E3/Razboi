@@ -2,6 +2,7 @@ import sys
 from random import *
 import tkinter as tk
 import time
+#from PIL import ImageTk, Image
 
 class Card:
    symbol = ''
@@ -88,6 +89,7 @@ class Game:
    cardsForWinner = list()
    winner = Player([], '')
    draw = False
+   nrCartiDeDat = 0
    def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
@@ -95,6 +97,7 @@ class Game:
    
    def start(self):
       self.setWindowSettings()
+      self.setDefaultBg()
       self.setPlayersLables()
       self.setNextCardButton()
       self.setWarButton()
@@ -182,46 +185,45 @@ class Game:
             self.cardsForWinner = list()
             self.player2.increaseScore()
          else:
+            self.setNrDeCartiDeDat()
             self.war = True
             
          self.setPlayersLables()
-      
+   
+   def setNrDeCartiDeDat(self):
+      if self.cardsForWinner[-1].getValue() != 100:
+         self.nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
+      else:
+         self.nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
+            
    def warCase(self):
       if self.war == True:
-         if self.cardsForWinner[-1].getValue() != 100:
-            nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
-         else:
-            nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
-         print(nrDeCartiDeDat)
-         if(nrDeCartiDeDat == 0):
-            self.draw = True
-            self.showWinner()
-         else:
-            for i in range(1, nrDeCartiDeDat + 1):
-               self.player1.getCards()[0].printCard()
-               self.player2.getCards()[0].printCard()
+         if self.nrDeCartiDeDat > 0:
                lastCardPlayer1 = self.player1.getCards()[0]
                lastCardPlayer2 = self.player2.getCards()[0]
                self.cardsForWinner.append(lastCardPlayer1)
                self.cardsForWinner.append(lastCardPlayer2)
                self.player1.removeFirstCard()
                self.player2.removeFirstCard()
-                  
+                     
                self.setCardsLabels(lastCardPlayer1, lastCardPlayer2)
-               time.sleep(1)
-                  
+               self.nrDeCartiDeDat = self.nrDeCartiDeDat - 1
+
+         else:
+            lastCardPlayer1 = self.cardsForWinner[len(self.cardsForWinner) - 1]
+            lastCardPlayer2 = self.cardsForWinner[len(self.cardsForWinner) - 2]
             if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
                self.player1.addCards(self.cardsForWinner)
                self.cardsForWinner = list()
-               self.war = False
                self.player1.increaseScore()
             elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
                self.player2.addCards(self.cardsForWinner)
                self.cardsForWinner = list()
-               self.war = False
                self.player2.increaseScore()
-            
-            self.setPlayersLables()
+               
+            self.war = False
+
+         self.setPlayersLables()
             
       if len(self.player1.getCards()) == 0:
          self.setWinner(self.player1)
@@ -244,6 +246,11 @@ class Game:
          labelWinner= tk.Label(self.window, 
                               text = "Draw",
                               bd = '1', relief = 'sunken').pack()
+         
+   def setDefaultBg(self):   
+      bgImg = tk.PhotoImage(file = "bg.png")
+      labelBg = tk.Label(self.window, image = bgImg).place(x = 0, y = 0)
+  
       
       
 def createDeck():
@@ -312,8 +319,8 @@ def startGame(player1, player2):
    #player1 = caseP1Wins(player1, player2)[0]
    #player2 = caseP1Wins(player1, player2)[1]
    
-   player1 = caseWarWithNotEnoughCards(player1, player2)[0]
-   player2 = caseWarWithNotEnoughCards(player1, player2)[1]
+   #player1 = caseWarWithNotEnoughCards(player1, player2)[0]
+   #player2 = caseWarWithNotEnoughCards(player1, player2)[1]
    
    game = Game(player1, player2)
    
