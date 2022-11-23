@@ -111,24 +111,42 @@ class Game:
             nrDeCartiDeDat = min(player1Card.getValue(), min(len(player1.getCards()), len(player2.getCards())))
          else:
             nrDeCartiDeDat = min(11, min(len(player1.getCards()), len(player2.getCards())))
-         print(nrDeCartiDeDat)
-         for i in range(1, nrDeCartiDeDat + 1):
-            self.player1.getCards()[0].printCard()
-            self.player2.getCards()[0].printCard()
-            lastCardPlayer1 = self.player1.getCards()[0]
-            lastCardPlayer2 = self.player2.getCards()[0]
-            cardsForWinner.append(lastCardPlayer1)
-            cardsForWinner.append(lastCardPlayer2)
-            player1.removeFirstCard()
-            player2.removeFirstCard()
          
-         if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
-            print("Player 1 wins")
-            player1.addCards(cardsForWinner)
+         if(nrDeCartiDeDat == 0):
+            print("Total draw")
          else:
-            print("Player 2 wins")
-            player2.addCards(cardsForWinner)
-      
+            self.warCase(cardsForWinner, nrDeCartiDeDat)
+         
+   
+   def warCase(self, cardsForWinner, nrDeCartiDeDat):
+      for i in range(1, nrDeCartiDeDat + 1):
+         self.player1.getCards()[0].printCard()
+         self.player2.getCards()[0].printCard()
+         lastCardPlayer1 = self.player1.getCards()[0]
+         lastCardPlayer2 = self.player2.getCards()[0]
+         cardsForWinner.append(lastCardPlayer1)
+         cardsForWinner.append(lastCardPlayer2)
+         player1.removeFirstCard()
+         player2.removeFirstCard()
+         
+      if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
+         player1.addCards(cardsForWinner)
+      elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
+         player2.addCards(cardsForWinner)
+      else:
+         print("Razboi:")
+         nrDeCartiDeDat = 0
+         if lastCardPlayer1.getValue() != 100:
+            nrDeCartiDeDat = min(lastCardPlayer1.getValue(), min(len(player1.getCards()), len(player2.getCards())))
+         else:
+            nrDeCartiDeDat = min(11, min(len(player1.getCards()), len(player2.getCards())))
+            
+         if(nrDeCartiDeDat == 0):
+            print("Total draw")
+         else:
+            self.warCase(cardsForWinner, nrDeCartiDeDat)
+         
+            
 def createDeck():
    deck = list()
    symbols = ['club', 'diamond', 'heart', 'spade']
@@ -159,9 +177,12 @@ if __name__ == '__main__':
       cardsForPlayer1.append(deck[i])
       cardsForPlayer2.append(deck[51 - i])
    
-   cardsForPlayer1[0] = Card('diamond', 7)
-   cardsForPlayer2[0] = Card('heart', 7)
+   cardsForPlayer1[0] = Card('diamond', 2)
+   cardsForPlayer2[0] = Card('heart', 2)
    
+   cardsForPlayer1[2] = Card('diamond', 4)
+   cardsForPlayer2[2] = Card('heart', 4)
+      
    player1 = Player(cardsForPlayer1, "Player")
    player2 = Player(cardsForPlayer2, "Computer")
    startGame(player1, player2)
