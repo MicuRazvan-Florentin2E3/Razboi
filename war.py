@@ -58,31 +58,39 @@ class Game:
    player1 = Player([], '')
    player2 = Player([], '')
    window = tk.Tk()
+   nextCardButton = tk.Button('')
    def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
       self.start()
    
    def start(self):
-      
-      self.setPlayerLabel()
-      self.setComputerLabel()
+      self.setWindowSettings()
+      self.setLables()
+      self.setNextCardButton()
       self.window.mainloop()
    
-   def setPlayerLabel(self):
-      frame = tk.Frame(master=self.window, width=200, height=150)
+   def setWindowSettings(self):
+      self.window.geometry('900x400')
+      self.window.title("War")
+      
+   def setLables(self):
+      frame = tk.Frame(master=self.window, width = 250, height = 150)
       frame.pack()
       
       label1 = tk.Label(master=frame, text=player1.getCurrentStatusInGame(), bg="white")
-      label1.place(x=30, y=30)
+      label1.place(x = 0, y = 0)
       
-   def setComputerLabel(self):
-      frame2 = tk.Frame(master=self.window, width=200, height=150)
-      frame2.pack()
-
-      label2 = tk.Label(master=frame2, text=player2.getCurrentStatusInGame(), bg="white")
-      label2.place(x=30, y=300)
-      print("a")
+      label2 = tk.Label(master=frame, text=player2.getCurrentStatusInGame(), bg="white")
+      label2.place(x = 100, y = 0)
+   
+   def setNextCardButton(self):
+      self.nextCardButton = tk.Button(self.window, text="Next Card", width = 20, command = self.giveNextCard)
+      self.nextCardButton.place(x = 400, y = 300)
+      
+   
+   def giveNextCard(event):
+      print("test button")
       
 def createDeck():
    deck = list()
