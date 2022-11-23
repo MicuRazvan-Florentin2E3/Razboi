@@ -220,7 +220,9 @@ class Game:
                self.cardsForWinner = list()
                self.war = False
                self.player2.increaseScore()
-               
+            
+            self.setPlayersLables()
+            
       if len(self.player1.getCards()) == 0:
          self.setWinner(self.player1)
          self.showWinner()
@@ -284,15 +286,34 @@ def caseP1Wins(player1, player2):
 
    return [player1, player2]
 
+def caseWarWithNotEnoughCards(player1, player2):
+   player1.setCards([Card('diamond', 4)])
+   player2.setCards([Card('heart', 4)])
+   
+   player1.addCard(Card("heart" , 2))
+   player1.addCard(Card("diamond", 13))
+   player1.addCard(Card("diamond", 9))
+   player1.addCard(Card("diamond", 5))
+   player1.addCard(Card("diamond", 6))
+   
+   player2.addCard(Card("heart" , 5))
+   player2.addCard(Card("heart" , 6))
+   player2.addCard(Card("heart" , 100))
+   
+   return [player1, player2]
+   
 def startGame(player1, player2):
-   player1 = caseDoubleWar(player1, player2)[0]
-   player2 = caseDoubleWar(player1, player2)[1]
+   #player1 = caseDoubleWar(player1, player2)[0]
+   #player2 = caseDoubleWar(player1, player2)[1]
    
    #player1 = caseDraw(player1, player2)[0]
    #player2 = caseDraw(player1, player2)[1]
    
    #player1 = caseP1Wins(player1, player2)[0]
    #player2 = caseP1Wins(player1, player2)[1]
+   
+   player1 = caseWarWithNotEnoughCards(player1, player2)[0]
+   player2 = caseWarWithNotEnoughCards(player1, player2)[1]
    
    game = Game(player1, player2)
    
