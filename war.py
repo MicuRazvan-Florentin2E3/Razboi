@@ -2,7 +2,6 @@ import sys
 from random import *
 import tkinter as tk
 
-
 class Card:
    symbol = ''
    value = 0
@@ -56,6 +55,8 @@ class Player:
    
    def setFirstCard(self, card):
       self.cards[0] = card
+
+
 class Game:
    player1 = Player([], '')
    player2 = Player([], '')
@@ -77,20 +78,21 @@ class Game:
       self.window.title("War")
       
    def setLables(self):
-      frame = tk.Frame(master=self.window, width = 250, height = 150)
-      frame.pack()
       
-      label1 = tk.Label(master=frame, text=player1.getCurrentStatusInGame(), bg="white")
-      label1.place(x = 0, y = 0)
+      label1 = tk.Label(self.window, 
+                     text = self.player1.getCurrentStatusInGame(),
+                     bd = '1', relief = 'sunken')
+      label1.place(x = 20, y = 50)
       
-      label2 = tk.Label(master=frame, text=player2.getCurrentStatusInGame(), bg="white")
-      label2.place(x = 100, y = 0)
+      label2 = tk.Label(self.window, 
+                     text = self.player2.getCurrentStatusInGame(),
+                     bd = '1', relief = 'sunken')
+      label2.place(x = 725, y = 50)
    
    def setNextCardButton(self):
       self.nextCardButton = tk.Button(self.window, text="Next Card", width = 20, command = self.giveNextCard)
       self.nextCardButton.place(x = 400, y = 300)
       
-   
    def giveNextCard(self):
       player1Card = self.player1.getCards()[0]
       player2Card = self.player2.getCards()[0]
@@ -145,7 +147,6 @@ class Game:
             print("Total draw")
          else:
             self.warCase(cardsForWinner, nrDeCartiDeDat)
-         
             
 def createDeck():
    deck = list()
@@ -166,7 +167,18 @@ def shuffleDeck(deck):
       deck.pop(randomNr - 1)
    return shuffledDeck
 
+def caseDoubleWar(player1, player2):
+   cardsForPlayer1[0] = Card('diamond', 2)
+   cardsForPlayer2[0] = Card('heart', 2)
+   
+   cardsForPlayer1[2] = Card('diamond', 4)
+   cardsForPlayer2[2] = Card('heart', 4)
+   
+   return [player1, player2]
+
 def startGame(player1, player2):
+   #player1 = caseDoubleWar(player1, player2)[0]
+   #player2 = caseDoubleWar(player1, player2)[1]
    game = Game(player1, player2)
    
 if __name__ == '__main__':
@@ -176,17 +188,11 @@ if __name__ == '__main__':
    for i in range(0, 26):
       cardsForPlayer1.append(deck[i])
       cardsForPlayer2.append(deck[51 - i])
-   
-   cardsForPlayer1[0] = Card('diamond', 2)
-   cardsForPlayer2[0] = Card('heart', 2)
-   
-   cardsForPlayer1[2] = Card('diamond', 4)
-   cardsForPlayer2[2] = Card('heart', 4)
       
    player1 = Player(cardsForPlayer1, "Player")
    player2 = Player(cardsForPlayer2, "Computer")
    startGame(player1, player2)
    
-      
+
    
    
