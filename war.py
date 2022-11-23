@@ -1,8 +1,7 @@
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from random import *
+import tkinter as tk
+
 
 class Card:
    symbol = ''
@@ -22,10 +21,12 @@ class Card:
       
 class Player:
    cards = list()
-   
-   def __init__(self, cards):
+   score = 0
+   name = ''
+   def __init__(self, cards, name):
       self.cards = cards
-   
+      self.name = name
+      
    def getCards(self):
       return self.cards
    
@@ -35,42 +36,54 @@ class Player:
    def addCards(self, cards):
       self.cards = self.cards + cards
    
+   def getCards(self):
+      return self.cards
+   
    def removeFirstCard(self):
       self.cards.pop(0)
       
-class Window(QMainWindow):
-   def __init__(self):
-      super().__init__()
-
-      self.setWindow()
-      self.setNextCardButton()
-      
-   def setWindow(self):
-      self.setWindowTitle("War")
-      self.setFixedSize(QSize(900, 400))
+   def increaseScore(self):
+      self.score = self.score + 1
    
-   def setNextCardButton(self):
-      nextCardButton = QPushButton("Next card", self)
-      nextCardButton.setGeometry(375, 300, 150, 50)
-      #startButton.clicked.connect(self.showNextCard)
-      
-
-stylesheet = """
-    MainWindow {
-        background-image: url("bg.jpg"); 
-        background-repeat: no-repeat; 
-        background-position: center;
-    }
-"""
-    
-def openWindow():
+   def getScore(self):
+      return self.score
    
-   app = QApplication([])
-   app.setStyleSheet(stylesheet)
-   window = Window()
-   window.show()
-   app.exec()
+   def getName(self):
+      return self.name
+   
+   def getCurrentStatusInGame(self):
+      return self.getName() + " Cards: " + str(len(self.getCards())) + " Score: " + str(self.getScore())
+   
+class Game:
+   player1 = Player([], '')
+   player2 = Player([], '')
+   window = tk.Tk()
+   def __init__(self, player1, player2):
+      self.player1 = player1
+      self.player2 = player2
+      self.start()
+   
+   def start(self):
+      
+      self.setPlayerLabel()
+      self.setComputerLabel()
+      self.window.mainloop()
+   
+   def setPlayerLabel(self):
+      frame = tk.Frame(master=self.window, width=200, height=150)
+      frame.pack()
+      
+      label1 = tk.Label(master=frame, text=player1.getCurrentStatusInGame(), bg="white")
+      label1.place(x=30, y=30)
+      
+   def setComputerLabel(self):
+      frame2 = tk.Frame(master=self.window, width=200, height=150)
+      frame2.pack()
 
+      label2 = tk.Label(master=frame2, text=player2.getCurrentStatusInGame(), bg="white")
+      label2.place(x=30, y=300)
+      print("a")
+      
 def createDeck():
    deck = list()
    symbols = ['club', 'diamond', 'heart', 'spade']
@@ -90,8 +103,10 @@ def shuffleDeck(deck):
       deck.pop(randomNr - 1)
    return shuffledDeck
 
+def startGame(player1, player2):
+   game = Game(player1, player2)
+   
 if __name__ == '__main__':
-   #openWindow()
    deck = shuffleDeck(createDeck())
    cardsForPlayer1 = list()
    cardsForPlayer2 = list()
@@ -99,10 +114,10 @@ if __name__ == '__main__':
       cardsForPlayer1.append(deck[i])
       cardsForPlayer2.append(deck[51 - i])
    
-   player1 = Player(cardsForPlayer1)
-   player2 = Player(cardsForPlayer2)
+   player1 = Player(cardsForPlayer1, "Player")
+   player2 = Player(cardsForPlayer2, "Computer")
+   startGame(player1, player2)
    
-   print(len(player1.getCards()))
       
    
    
