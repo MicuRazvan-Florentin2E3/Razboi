@@ -1,8 +1,6 @@
 import sys
 from random import *
 import tkinter as tk
-import time
-from PIL import ImageTk, Image
 
 class Card:
    symbol = ''
@@ -30,8 +28,6 @@ class Card:
       else:
          return 'A'
    
-   
-      
    def printCard(self):
       print("Symbol:", self.getSymbol(), ", Value:", self.getValue())
       
@@ -46,20 +42,8 @@ class Player:
    def getCards(self):
       return self.cards
    
-   def addCard(self, card):
-      self.cards.append(card)
-   
-   def addCards(self, cards):
-      self.cards = self.cards + cards
-   
    def getCards(self):
       return self.cards
-   
-   def removeFirstCard(self):
-      self.cards.pop(0)
-      
-   def increaseScore(self):
-      self.score = self.score + 1
    
    def getScore(self):
       return self.score
@@ -69,6 +53,18 @@ class Player:
    
    def getCurrentStatusInGame(self):
       return self.getName() + " Cards: " + str(len(self.getCards())) + " Score: " + str(self.getScore())
+   
+   def addCard(self, card):
+      self.cards.append(card)
+   
+   def addCards(self, cards):
+      self.cards = self.cards + cards
+   
+   def removeFirstCard(self):
+      self.cards.pop(0)
+      
+   def increaseScore(self):
+      self.score = self.score + 1
    
    def setFirstCard(self, card):
       self.cards[0] = card
@@ -126,15 +122,8 @@ class Game:
                      text = self.player2.getCurrentStatusInGame(),
                      bd = '1', relief = 'sunken').place(x = 725, y = 20)
 
-   def getSymbolForShow(self, symbol):
-      if symbol == 'diamond':
-         return self.diamondImg
-      elif symbol == 'heart':
-         return self.heartImg
-      elif symbol == 'club':
-         return self.clubImg
-      else:
-         return self.spadeImg
+   def setWinner(self, player):
+      self.winner = player
       
    def setCardsLabels(self, cardPlayer1, cardPlayer2):
       cardPlayer1Value = cardPlayer1.getValueForShow()
@@ -156,6 +145,28 @@ class Game:
                                  height = 400, width = 140, 
                                  image =  cardPlayer2Symbol, compound = 'top',
                                  font = ('Ariel', 100)).place(x = 725, y = 40)
+   
+   def setNrDeCartiDeDat(self):
+      if self.cardsForWinner[-1].getValue() != 100:
+         self.nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
+      else:
+         self.nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
+           
+   def setDefaultBg(self):
+      labelBg = tk.Label(self.window, image = self.bgImg)
+      labelBg.place(x = 0, y = 0)
+      labelBg2 = tk.Label(self.window, image = self.bgImg)
+      labelBg2.place(x = 481, y = 0)
+         
+   def getSymbolForShow(self, symbol):
+      if symbol == 'diamond':
+         return self.diamondImg
+      elif symbol == 'heart':
+         return self.heartImg
+      elif symbol == 'club':
+         return self.clubImg
+      else:
+         return self.spadeImg
       
    def giveNextCard(self):
       if self.war == False:
@@ -192,13 +203,6 @@ class Game:
             self.war = True
             
          self.setPlayersLables()
-   
-   def setNrDeCartiDeDat(self):
-      if self.cardsForWinner[-1].getValue() != 100:
-         self.nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
-      else:
-         self.nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
-      print(self.nrDeCartiDeDat)
             
    def warCase(self):
       if self.war == True:
@@ -221,8 +225,6 @@ class Game:
             lastCardPlayer2 = self.cardsForWinner[len(self.cardsForWinner) - 1]
             lastCardPlayer1 = self.cardsForWinner[len(self.cardsForWinner) - 2]
             
-            lastCardPlayer1.printCard()
-            lastCardPlayer2.printCard()
             if(lastCardPlayer1.getValue() == lastCardPlayer2.getValue()):
                self.setNrDeCartiDeDat()   
             else:   
@@ -244,11 +246,6 @@ class Game:
             elif len(self.player2.getCards()) == 0:
                self.setWinner(self.player2)
                self.showWinner()
-               
-         
-         
-   def setWinner(self, player):
-      self.winner = player
       
    def showWinner(self):
       for widget in self.window.winfo_children():
@@ -263,15 +260,7 @@ class Game:
                               text = "Draw",
                               bd = '1', relief = 'sunken',
                               font = ('Ariel', 50)).pack()
-         
-   def setDefaultBg(self):
-      labelBg = tk.Label(self.window, image = self.bgImg)
-      labelBg.place(x = 0, y = 0)
-      labelBg2 = tk.Label(self.window, image = self.bgImg)
-      labelBg2.place(x = 481, y = 0)
-  
-      
-      
+ 
 def createDeck():
    deck = list()
    symbols = ['club', 'diamond', 'heart', 'spade']
@@ -329,8 +318,8 @@ def caseWarWithNotEnoughCards(player1, player2):
    return [player1, player2]
    
 def startGame(player1, player2):
-   player1 = caseDoubleWar(player1, player2)[0]
-   player2 = caseDoubleWar(player1, player2)[1]
+   #player1 = caseDoubleWar(player1, player2)[0]
+   #player2 = caseDoubleWar(player1, player2)[1]
    
    #player1 = caseDraw(player1, player2)[0]
    #player2 = caseDraw(player1, player2)[1]
