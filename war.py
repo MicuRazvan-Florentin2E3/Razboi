@@ -2,7 +2,7 @@ import sys
 from random import *
 import tkinter as tk
 import time
-#from PIL import ImageTk, Image
+from PIL import ImageTk, Image
 
 class Card:
    symbol = ''
@@ -75,7 +75,7 @@ class Player:
    
    def setCards(self, cards):
       self.cards = cards
-
+      
 class Game:
    player1 = Player([], '')
    player2 = Player([], '')
@@ -90,6 +90,8 @@ class Game:
    winner = Player([], '')
    draw = False
    nrCartiDeDat = 0
+   bgImg = tk.PhotoImage(file='bg.png')
+   
    def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
@@ -240,16 +242,20 @@ class Game:
          widget.destroy()
       if self.draw == False:
          labelWinner= tk.Label(self.window, 
-                              text = "Congrat: " + self.winner.getName() + " you are the winner!",
-                              bd = '1', relief = 'sunken').pack()
+                              text = "Congrat " + self.winner.getName() + " you are the winner!",
+                              bd = '1', relief = 'sunken',
+                              font = ('Ariel', 30)).pack()
       else:
          labelWinner= tk.Label(self.window, 
                               text = "Draw",
-                              bd = '1', relief = 'sunken').pack()
+                              bd = '1', relief = 'sunken',
+                              font = ('Ariel', 50)).pack()
          
-   def setDefaultBg(self):   
-      bgImg = tk.PhotoImage(file = "bg.png")
-      labelBg = tk.Label(self.window, image = bgImg).place(x = 0, y = 0)
+   def setDefaultBg(self):
+      labelBg = tk.Label(self.window, image = self.bgImg)
+      labelBg.place(x = 0, y = 0)
+      labelBg2 = tk.Label(self.window, image = self.bgImg)
+      labelBg2.place(x = 481, y = 0)
   
       
       
@@ -313,8 +319,8 @@ def startGame(player1, player2):
    #player1 = caseDoubleWar(player1, player2)[0]
    #player2 = caseDoubleWar(player1, player2)[1]
    
-   #player1 = caseDraw(player1, player2)[0]
-   #player2 = caseDraw(player1, player2)[1]
+   player1 = caseDraw(player1, player2)[0]
+   player2 = caseDraw(player1, player2)[1]
    
    #player1 = caseP1Wins(player1, player2)[0]
    #player2 = caseP1Wins(player1, player2)[1]
