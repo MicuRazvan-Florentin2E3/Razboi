@@ -159,6 +159,10 @@ class Game:
       
    def giveNextCard(self):
       if self.war == False:
+         if len(self.player1.getCards()) == 0 and len(self.player2.getCards()) == 0:
+            self.draw = True
+            self.showWinner()
+            
          if len(self.player1.getCards()) > 0 or len(self.player2.getCards()) > 0:
             if len(self.player1.getCards()) == 0:
                self.setWinner(self.player2)
@@ -166,9 +170,6 @@ class Game:
             elif len(self.player2.getCards()) == 0:
                self.setWinner(self.player1)
                self.showWinner()
-         else:
-            self.draw = True
-            self.showWinner()
          
          player1Card = self.player1.getCards()[0]
          player2Card = self.player2.getCards()[0]
@@ -197,9 +198,14 @@ class Game:
          self.nrDeCartiDeDat = min(self.cardsForWinner[-1].getValue(), min(len(self.player1.getCards()), len(self.player2.getCards())))
       else:
          self.nrDeCartiDeDat = min(11, min(len(self.player1.getCards()), len(self.player2.getCards())))
+      print(self.nrDeCartiDeDat)
             
    def warCase(self):
       if self.war == True:
+         if len(self.player1.getCards()) == 0 and len(self.player2.getCards()) == 0:
+            self.draw = True
+            self.showWinner()
+            
          if self.nrDeCartiDeDat > 0:
                lastCardPlayer1 = self.player1.getCards()[0]
                lastCardPlayer2 = self.player2.getCards()[0]
@@ -207,32 +213,39 @@ class Game:
                self.cardsForWinner.append(lastCardPlayer2)
                self.player1.removeFirstCard()
                self.player2.removeFirstCard()
-                     
                self.setCardsLabels(lastCardPlayer1, lastCardPlayer2)
                self.nrDeCartiDeDat = self.nrDeCartiDeDat - 1
 
+               self.setPlayersLables()
          else:
-            lastCardPlayer1 = self.cardsForWinner[len(self.cardsForWinner) - 1]
-            lastCardPlayer2 = self.cardsForWinner[len(self.cardsForWinner) - 2]
-            if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
-               self.player1.addCards(self.cardsForWinner)
-               self.cardsForWinner = list()
-               self.player1.increaseScore()
-            elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
-               self.player2.addCards(self.cardsForWinner)
-               self.cardsForWinner = list()
-               self.player2.increaseScore()
-               
-            self.war = False
-
-         self.setPlayersLables()
+            lastCardPlayer2 = self.cardsForWinner[len(self.cardsForWinner) - 1]
+            lastCardPlayer1 = self.cardsForWinner[len(self.cardsForWinner) - 2]
             
-      if len(self.player1.getCards()) == 0:
-         self.setWinner(self.player1)
-         self.showWinner()
-      elif len(self.player2.getCards()) == 0:
-         self.setWinner(self.player2)
-         self.showWinner()
+            lastCardPlayer1.printCard()
+            lastCardPlayer2.printCard()
+            if(lastCardPlayer1.getValue() == lastCardPlayer2.getValue()):
+               self.setNrDeCartiDeDat()   
+            else:   
+               if lastCardPlayer1.getValue() > lastCardPlayer2.getValue():
+                  self.player1.addCards(self.cardsForWinner)
+                  self.cardsForWinner = list()
+                  self.player1.increaseScore()
+               elif lastCardPlayer1.getValue() < lastCardPlayer2.getValue():
+                  self.player2.addCards(self.cardsForWinner)
+                  self.cardsForWinner = list()
+                  self.player2.increaseScore()
+               self.war = False
+
+            self.setPlayersLables()
+         
+            if len(self.player1.getCards()) == 0:
+               self.setWinner(self.player1)
+               self.showWinner()
+            elif len(self.player2.getCards()) == 0:
+               self.setWinner(self.player2)
+               self.showWinner()
+               
+         
          
    def setWinner(self, player):
       self.winner = player
@@ -316,11 +329,11 @@ def caseWarWithNotEnoughCards(player1, player2):
    return [player1, player2]
    
 def startGame(player1, player2):
-   #player1 = caseDoubleWar(player1, player2)[0]
-   #player2 = caseDoubleWar(player1, player2)[1]
+   player1 = caseDoubleWar(player1, player2)[0]
+   player2 = caseDoubleWar(player1, player2)[1]
    
-   player1 = caseDraw(player1, player2)[0]
-   player2 = caseDraw(player1, player2)[1]
+   #player1 = caseDraw(player1, player2)[0]
+   #player2 = caseDraw(player1, player2)[1]
    
    #player1 = caseP1Wins(player1, player2)[0]
    #player2 = caseP1Wins(player1, player2)[1]
