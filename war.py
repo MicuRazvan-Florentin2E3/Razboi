@@ -155,8 +155,8 @@ class Game:
    def setDefaultBg(self):
       labelBg = tk.Label(self.window, image = self.bgImg)
       labelBg.place(x = 0, y = 0)
-      labelBg2 = tk.Label(self.window, image = self.bgImg)
-      labelBg2.place(x = 481, y = 0)
+      #labelBg2 = tk.Label(self.window, image = self.bgImg)
+      #labelBg2.place(x = 481, y = 0)
          
    def getSymbolForShow(self, symbol):
       if symbol == 'diamond':
