@@ -250,6 +250,7 @@ class Game:
    def showWinner(self):
       for widget in self.window.winfo_children():
          widget.destroy()
+      self.setDefaultBg()
       if self.draw == False:
          labelWinner= tk.Label(self.window, 
                               text = "Congrat " + self.winner.getName() + " you are the winner!",
@@ -324,8 +325,8 @@ def startGame(player1, player2):
    #player1 = caseDraw(player1, player2)[0]
    #player2 = caseDraw(player1, player2)[1]
    
-   #player1 = caseP1Wins(player1, player2)[0]
-   #player2 = caseP1Wins(player1, player2)[1]
+   player1 = caseP1Wins(player1, player2)[0]
+   player2 = caseP1Wins(player1, player2)[1]
    
    #player1 = caseWarWithNotEnoughCards(player1, player2)[0]
    #player2 = caseWarWithNotEnoughCards(player1, player2)[1]
